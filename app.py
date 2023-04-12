@@ -91,8 +91,38 @@ if authentication_status:
         # print(response.text)
 
 
-    else
-        pass
+    else:
+        st.title("食物食谱")
+        pp1=st.slider("id",0,200,1)
+        url = "https://chinese-food-db.p.rapidapi.com/"+str(pp1)
+
+        headers = {
+            "X-RapidAPI-Key": "bd10c657b4msh6dbd4f9bf219b22p14f68ajsn0d507d4fae87",
+            "X-RapidAPI-Host": "chinese-food-db.p.rapidapi.com"
+        }
+
+        response = requests.request("GET", url, headers=headers)
+        ini_string_s = response.json()
+
+        st.text(ini_string_s["id"])
+        st.text(ini_string_s["title"])
+        st.text(ini_string_s["difficulty"])
+        st.text(ini_string_s["portion"])
+        st.text(ini_string_s["time"])
+        st.text(ini_string_s["description"])
+
+        st.text("")
+        st.text("ingredients")
+        for f in ini_string_s["ingredients"]:
+            st.text(f)
+
+        st.text("")
+        st.text("method")
+        df_p = pd.DataFrame.from_dict(ini_string_s["method"], orient='columns')
+        st.table(df_p)
+        response = requests.get(ini_string_s["image"])
+        img = Image.open(BytesIO(response.content))
+        st.image(img)
 
 
 
